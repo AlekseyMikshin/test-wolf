@@ -48,6 +48,7 @@ public class CalculateClass {
         double result = (calcSize(size) + calcDistanceAndFragility(distance,fragility)) * calcLoad(load);
 
         if (result < 400){
+            System.out.print("Минимальная стоиость доставки = 400 рублей");
             return 400;
         }
         else {
