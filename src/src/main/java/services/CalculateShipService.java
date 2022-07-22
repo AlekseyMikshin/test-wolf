@@ -1,29 +1,17 @@
-import lombok.extern.java.Log;
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
-
-import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.Scanner;
+package services;
 
 
-
-
-@Log4j2
-public class CalculateClass {
-
-
+public class CalculateShipService {
 
     /**
-     *  мЕТОД ДЛЯ РАСЧЕТАВ СТОИОСТИ ДСОАТВКП
+     *  Метод рассчета стоимости доставки
      * @param distance
      * @param size
      * @param fragility
      * @param load
      * @return
      */
-    public static double calcShipCost (Integer distance, Boolean size, Boolean fragility , String load)  {
+    public static double calcShipCost (Integer distance, Boolean size, Boolean fragility, String load)  {
 
         if (distance == null) {
             throw new RuntimeException("missing required parameter - distance");
@@ -45,18 +33,16 @@ public class CalculateClass {
         }
 
 
-        double result = (calcSize(size) + calcDistanceAndFragility(distance,fragility)) * calcLoad(load);
+        var result = (calcSize(size) + calcDistanceAndFragility(distance,fragility)) * calcLoad(load);
 
         if (result < 400){
-            System.out.print("Минимальная стоиость доставки = 400 рублей");
+            System.out.print("Минимальная стоимость доставки = 400 рублей \n");
             return 400;
         }
         else {
-            System.out.print("Стоимость доставки = " + result + " рублей");
+            System.out.print("Стоимость доставки = " + result + " рублей \n");
             return result;
         }
-
-
     }
 
     /**
@@ -111,22 +97,32 @@ public class CalculateClass {
      */
         public static int calcDistanceAndFragility(Integer distance, Boolean fragility) {
 
-            if (distance <= 2) {
+            var fragIncrease = 300;
+            if (distance <= 2 & fragility) {
+                return 50 + fragIncrease;
+            }
+            if (distance <= 2 & !fragility) {
                 return 50;
             }
-             else if (distance <= 10) {
+             else if (distance <= 10 & fragility) {
+                return 100 + fragIncrease;
+            }
+            else if (distance <= 10 & !fragility) {
                 return 100;
             }
-            else if (distance <= 30) {
+
+
+            else if (distance <= 30 & fragility) {
+                return 200 + fragIncrease;
+            }
+            else if (distance <= 30 & !fragility) {
                 return 200;
             }
-             else {
-                 if (fragility) {
-                 throw new RuntimeException("Хрупкие грузы нельзя возить на расстояние более 30 км");
-                 }
-                 else {
-                     return 300;
-                 }
+            else if (distance > 30 & fragility) {
+                throw new RuntimeException("Хрупкие грузы нельзя возить на расстояние более 30 км");
+            }
+            else {
+                return 300 + fragIncrease;
             }
         }
 
